@@ -13,7 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { SearchIcon } from "~/component/Icons";
 import { useDebounce } from "~/Hooks";
-import  * as searchServices  from "~/apiServices/searchServices";
+import * as searchServices from "~/apiServices/searchServices";
 
 const cx = classNames.bind(styles);
 
@@ -29,7 +29,7 @@ const Search = () => {
 
   const handleSearch = (event) => {
     const searchValue = event.target.value;
-    if(!searchValue.startsWith(' ') || searchValue.trim()){
+    if (!searchValue.startsWith(" ") || searchValue.trim()) {
       setSearchValue(searchValue);
     }
   };
@@ -47,24 +47,22 @@ const Search = () => {
     setShowResult(false);
   };
 
-
   useEffect(() => {
     if (!debounced.trim()) {
       setSearchResult([]);
       return;
     }
-    const fetchApi = async() => {
+    const fetchApi = async () => {
       setLoading(true);
       const result = await searchServices.search(debounced);
       setSearchResult(result);
       setLoading(false);
-    }
+    };
     fetchApi();
-
   }, [debounced]);
   return (
-
-    // <div>
+    //Using a wrapper <div>  tag around the reference element solves this by creating a new parentNode context.
+    <div>
       <HeadlessTippy
         interactive
         visible={showResult && searchResult.length > 0}
@@ -96,12 +94,15 @@ const Search = () => {
           {loading && (
             <FontAwesomeIcon className={cx("loading")} icon={faSpinner} />
           )}
-          <button className={cx("search-btn")} onMouseDown={(e)=>e.preventDefault()}>
+          <button
+            className={cx("search-btn")}
+            onMouseDown={(e) => e.preventDefault()}
+          >
             <SearchIcon />
           </button>
         </div>
       </HeadlessTippy>
-    // </div>
+    </div>
   );
 };
 
